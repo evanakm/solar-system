@@ -1,0 +1,20 @@
+<tr>
+    <td class="slidercontainercell">
+        <input
+            class="range"
+            type="range"
+            name=""
+            value="{{sliderVal}}"
+            min="{{sliderMin}}"
+            max="{{sliderMax}}"
+            [(ngModel)]="sliderVal"
+            (ngModelChange)="rangeSlide($event)"
+        />
+    </td>
+    <td rowSpan="2" class="rangevalue">
+        {{sliderVal}}
+    </td>
+</tr>
+<tr>
+    <td class="bodynote">{{note}}</td>
+</tr>
