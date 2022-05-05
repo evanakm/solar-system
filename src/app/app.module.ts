@@ -12,7 +12,7 @@ import { SolarSystemViewportModule } from './components/viewport/solarSystemView
   ],
   imports: [
     BrowserModule,
-    MVCModule,
+    MVCModule.forRoot(),
     SidebarModule,
     SolarSystemViewportModule
   ],

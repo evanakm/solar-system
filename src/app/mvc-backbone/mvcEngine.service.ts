@@ -6,7 +6,9 @@ import { Vector3 } from 'three';
 import { ControlModel } from './models/controlModel';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class MVCEngineService {
 
     private solarSystemModel = new SolarSystemModel(5);

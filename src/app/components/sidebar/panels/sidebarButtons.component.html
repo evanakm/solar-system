@@ -2,17 +2,19 @@
     <tbody>
         <tr>
             <td class="ivoryborder planet-canvas">
-                <sidebar-window-viewport [texturePath]="TexturePath"></sidebar-window-viewport>
+                <sidebar-window-viewport [texturePath]="TexturePath" #panelViewport></sidebar-window-viewport>
             </td>
         </tr>
         <tr>
             <td class="ivoryborder" style="padding-top:1.5px;padding-bottom:1.5px">
-                <button>Change Texture</button>
+                <!--button (click)="changeTexture()">Change Texture</button-->
+                <input type="file" accept="image/png, image/jpeg" (change)="changeTexture($event)">
             </td>
         </tr>
         <tr>
             <td class="ivoryborder" style="padding-top:1.5px;padding-bottom:1.5px">
-                <button>Add Satellite</button>
+                <button (click)="addSatellite()">Add Satellite</button>
+                <!--input type="file" accept="image/png, image/jpeg" (change)="addSatellite($event)"-->
             </td>
         </tr>
     </tbody>

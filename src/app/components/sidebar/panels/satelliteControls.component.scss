@@ -7,7 +7,7 @@
 /*
 
 +------------------------------------------------------------+
-|                namecontainer bodyname                      |
+|       namecontainer bodyname (defined higher up)           |
 +------------------------------------------------------------+
 |                      nopad nomarg                          |
 |    +---------------------+------------+  +-------------+   |
@@ -28,34 +28,12 @@
 
 */
 
-.namecontainer {
-    background-color: #227722
-}
-
-.bodyname {
-    color: wheat;
-    margin-left:auto;
-    margin-right:auto;
-    text-align:left;
-    font-size: 1.3em;
-    padding-bottom:0px;
-}  
-
 .slidercontainertable{
   width:95%;
   margin-left:auto;
   margin-right:auto;
   margin-top:2px;
   margin-bottom:3.5px;
-}
-
-/* Style the button that is used to open and close the collapsible content */
-.collapsible {
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  border: none;
-  outline: none;
 }
 
 .selected {
@@ -66,6 +44,3 @@
   text-align: center;
 }
 
-.active, .collapsible:hover {
-  background-color: #551111;
-}

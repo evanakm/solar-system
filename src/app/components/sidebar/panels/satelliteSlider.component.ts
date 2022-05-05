@@ -3,7 +3,7 @@
 // import './planetSliderStyle.scss'
 // import { debounce, throttle } from 'lodash';
 
-import { Component, Input, Inject } from '@angular/core';
+import { Component, Input, Inject, OnInit } from '@angular/core';
 import { MVCTokens } from 'src/app/mvc-backbone/tokens';
 import { MVCEngineService } from 'src/app/mvc-backbone/mvcEngine.service';
 
@@ -12,7 +12,7 @@ import { MVCEngineService } from 'src/app/mvc-backbone/mvcEngine.service';
     templateUrl: './satelliteSlider.component.html',
     styleUrls: ['./satelliteSlider.component.scss']
 })
-export class SatelliteSliderComponent {
+export class SatelliteSliderComponent implements OnInit {
     @Input() value: number;
     @Input() minValue: number;
     @Input() maxValue: number;
@@ -25,7 +25,10 @@ export class SatelliteSliderComponent {
     public sliderMax: number;
     public note: string;
 
-    constructor(@Inject(MVCTokens.MVCEngineServiceToken) private mvc: MVCEngineService) {        
+    constructor(@Inject(MVCTokens.MVCEngineServiceToken) private mvc: MVCEngineService) {
+    }
+
+    public ngOnInit() {
         this.sliderVal = this.value;
         this.sliderMin = this.minValue;
         this.sliderMax = this.maxValue;
@@ -33,8 +36,8 @@ export class SatelliteSliderComponent {
     }
 
     rangeSlide(e): void {
-        this.sliderVal = e;
-        this.callback(this.sliderVal);
+        this.value = e;
+        this.callback(this.value);
         //this.mvc.Controller.acceptFrontEndParametersForId({}, this.uid)
     }
 

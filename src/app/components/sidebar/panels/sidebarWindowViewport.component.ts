@@ -1,5 +1,5 @@
 import { BufferGeometry, Material, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, SphereGeometry, TextureLoader, WebGLRenderer } from 'three';
-import { Component, Input, ViewChild, ElementRef, Inject } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Inject, OnInit, AfterViewInit } from '@angular/core';
 import { MVCTokens } from 'src/app/mvc-backbone/tokens';
 import { MVCEngineService } from 'src/app/mvc-backbone/mvcEngine.service';
 
@@ -9,7 +9,7 @@ const WIDTH = 79;
 const HEIGHT = 81;
 
 const RADIUS = 5; 
-const ANGULAR_VELOCITY = 0.0005;
+const ANGULAR_VELOCITY = 0.002;
 
 export class SidebarWindowView {
     private scene: Scene;
@@ -50,26 +50,33 @@ export class SidebarWindowView {
 		this.mesh.rotation.y += ANGULAR_VELOCITY;
     };
 
-    public swapTexture(texturePath: string) {
+    public swapTexture(texturePath: string): void {
         const texture = new TextureLoader().load(texturePath);
         this.mesh.material = new MeshBasicMaterial({ map: texture });
+    }
+
+    public swapMaterial(material: Material): void {
+        this.mesh.material = material;
     }
     
 }
 
 @Component({
     selector: 'sidebar-window-viewport',
-    template: `<div ref={innerRef} style="width:${WIDTH}px;height:${HEIGHT}px" #sidebarwindow></div>`,
+    template: `<div style="width:${WIDTH}px;height:${HEIGHT}px" #sidebarWindow></div>`,
     //styleUrls: ['./satelliteControls.component.scss']
 })
-export class SidebarWindowViewportComponent {
+export class SidebarWindowViewportComponent implements OnInit, AfterViewInit {
 
     @Input() texturePath: string;
-    @ViewChild('sidebarwindow') bodyWindowRef: ElementRef;
+    @ViewChild('sidebarWindow') bodyWindowRef: ElementRef;
 
     private view: SidebarWindowView;
 
     constructor(@Inject(MVCTokens.MVCEngineServiceToken) private mvc: MVCEngineService) {
+    }
+
+    public ngOnInit() {
         this.view = new SidebarWindowView(this.texturePath);
 
         window.addEventListener('resize', () => {
@@ -77,16 +84,24 @@ export class SidebarWindowViewportComponent {
         });
 
         this.mvc.ControlModel.onSelectedBodyChanged$.subscribe(id => {
-            this.view.swapTexture(this.mvc.SolarSystemModel.getTexturePathForId(id));
+            const material = this.mvc.SolarSystemModel.getMaterialForId(id);
+            this.view.swapMaterial(material);
+            //this.view.swapTexture(this.mvc.SolarSystemModel.getTexturePathForId(id));
         });
 
-        this.view.Renderer.setSize(79, 79);
+        this.view.Renderer.setSize(WIDTH, HEIGHT);
         this.view.Renderer.domElement.style.width ='85px';
         this.view.Renderer.domElement.style.height ='81px';
 
-        this.bodyWindowRef.nativeElement.appendChild(this.view.Renderer.domElement);
-
         this.updateCanvas();
+    }
+
+    public ngAfterViewInit() {
+        this.bodyWindowRef.nativeElement.appendChild(this.view.Renderer.domElement);
+    }
+
+    public updateTexture(path: string) {
+        this.view.swapTexture(path);
     }
 
     private updateCanvas(): void {

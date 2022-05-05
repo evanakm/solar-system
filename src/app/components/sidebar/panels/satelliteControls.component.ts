@@ -36,7 +36,15 @@ export class SatelliteControlsComponent implements SatelliteControlsInterface {
     public readonly slider4note: string = "Period of rotation (seconds)";
 
     constructor(@Inject(MVCTokens.MVCEngineServiceToken) private mvc: MVCEngineService) {
+        //console.log('mvc = ' + JSON.stringify(this.mvc));
+        //console.log('mvc.SolarSystemModel = ' + JSON.stringify(this.mvc.SolarSystemModel));
+        //console.log('mvc.SolarSystemModel.SatelliteData = ' + JSON.stringify(this.mvc.SolarSystemModel.SatelliteData));
+        //console.log('mvc.SolarSystemModel.SatelliteData.TexturePath = ' + JSON.stringify(this.mvc.SolarSystemModel.SatelliteData.));
+        //console.log("selected id = " + this.mvc.ControlModel.SelectedID);
+
         this.updateSatelliteData(this.mvc.SolarSystemModel.SatelliteData);
+
+        //console.log("TexturePath = " + this.TexturePath)
     
         // may need to throttle or debounce
         this.mvc.SolarSystemModel.onParametersChanged$.subscribe(data => {
@@ -89,25 +97,25 @@ export class SatelliteControlsComponent implements SatelliteControlsInterface {
         return this.satelliteParams.texturePath;
     }
 
-    public setOrbitalRadius(value: number): void {
+    public setOrbitalRadius: (value: number) => void = ((value: number) => {
         this.satelliteParams.orbitalRadius = value;
         this.sendDataToController();
-    }
+    }).bind(this);
 
-    public setBodyRadius(value: number): void {
+    public setBodyRadius: (value: number) => void = ((value: number) => {
         this.satelliteParams.bodyRadius = value;
         this.sendDataToController();
-    }
+    }).bind(this);
 
-    public setOrbitalPeriod(value: number): void {
+    public setOrbitalPeriod: (value: number) => void = ((value: number) => {
         this.satelliteParams.orbitalPeriod = value;
         this.sendDataToController();
-    }
+    }).bind(this);
 
-    public setRotationalPeriod(value: number): void {
+    public setRotationalPeriod: (value: number) => void = ((value: number) => {
         this.satelliteParams.rotationalPeriod = value;
         this.sendDataToController();
-    }
+    }).bind(this);
 
 
     private sendDataToController(): void {

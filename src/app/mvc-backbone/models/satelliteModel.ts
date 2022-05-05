@@ -1,6 +1,7 @@
 import { Matrix4, Mesh, MeshBasicMaterial, SphereGeometry, TextureLoader, Vector3, Vector4 } from 'three';
 import { CoordinateFrame } from '../../utilities/coordinateFrame'
 import { v4 as generateV4 } from 'uuid';
+import * as THREE from 'three';
 
 export type SatelliteIdentifier = string;
 
@@ -21,6 +22,8 @@ export interface SatelliteFrontEndParameters {
 
 // TODO: Add a function to change parameters.
 export class SatelliteModel {
+
+	private static counter: number = 0;
 
 	public static createSatelliteParameters(bodyRadius: number, rotationalAngularVelocity: number, orbitalRadius: number, orbitalAngularVelocity: number): SatelliteBackEndParameters {
 
@@ -68,8 +71,43 @@ export class SatelliteModel {
 		const absoluteRadius = scalingFactor * this.parameters.bodyRadius;
 
 		var geometry = new SphereGeometry(absoluteRadius, 16, 16);
-		var texture = new TextureLoader().load(texturePath);
-		var material = new MeshBasicMaterial({ map: texture });
+
+		let material: THREE.MeshBasicMaterial;
+
+		if (texturePath) {
+			const texture = new TextureLoader().load(texturePath);
+			material = new MeshBasicMaterial({ map: texture });	
+		} else {
+			let color: number;
+			switch (SatelliteModel.counter % 6) {
+				case 0:
+					color = 0x0000ff;
+					break;
+				case 1:
+					color = 0x00ff00;
+					break;
+				case 2:
+					color = 0xff0000;
+					break;
+				case 3:
+					color = 0x00ffff;
+					break;
+				case 4:
+					color = 0xffff00;
+					break;
+				case 5:
+					color = 0xff00ff;
+					break;
+				default:
+					color = 0xffffff;
+					break;
+			}
+			SatelliteModel.counter++;
+			material = new THREE.MeshBasicMaterial({ color: color });
+		}
+
+		// const texture = new TextureLoader().load(texturePath);
+		// var material = new MeshBasicMaterial({ map: texture });
 		//var material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
 		this.mesh = new Mesh(geometry, material);
 		this.mesh.rotation.x += Math.PI / 2;
@@ -87,9 +125,8 @@ export class SatelliteModel {
 		return this.uuid;
 	}
 
-	// TODO: Make fail gracefully
 	public get ParentUUID(): string {
-		return this.parent.UUID;
+		return this.parent ? this.parent.UUID : null;
 	}
 
 	public get IsDeleted(): boolean {
@@ -108,6 +145,10 @@ export class SatelliteModel {
 		return this.texturePath;
 	}
 
+	public get Material(): THREE.Material {
+		return this.mesh.material;
+	}
+
 	public set Parameters(value: SatelliteBackEndParameters) {
 		this.capturePhaseAndTime();
 		const scalingFactor = Math.max(value.bodyRadius / this.parameters.bodyRadius, 0.01);
@@ -120,7 +161,6 @@ export class SatelliteModel {
 		this.children.push(satellite);
 	}
 
-	// Ideally this would go into SolarSystemView, but I don't want to expose this.children
 	public addToScene(scene: THREE.Scene) {
 		scene.add(this.mesh);
 		for (const satellite of this.children) {
@@ -158,6 +198,18 @@ export class SatelliteModel {
 		for (const satellite of this.children) {
 			satellite.update(timeInSeconds);
 		}
+	}
+
+	public swapTexture(texturePath: string) {
+        const texture = new TextureLoader().load(texturePath);
+        this.mesh.material = new MeshBasicMaterial({ map: texture });
+	}
+
+	// Returns an array of UUIDs of [Sun, ..., this]
+	public ancestorTree(): SatelliteIdentifier[] {
+		const treeOfParent = !this.ParentUUID ? [] : this.parent.ancestorTree();
+		treeOfParent.push(this.UUID);
+		return treeOfParent;
 	}
 
 	// Set the origin and vectors in 3D space
