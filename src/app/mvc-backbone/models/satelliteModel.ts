@@ -20,7 +20,6 @@ export interface SatelliteFrontEndParameters {
 	orbitalPeriod: number
 }
 
-// TODO: Add a function to change parameters.
 export class SatelliteModel {
 
 	private static counter: number = 0;
@@ -106,9 +105,6 @@ export class SatelliteModel {
 			material = new THREE.MeshBasicMaterial({ color: color });
 		}
 
-		// const texture = new TextureLoader().load(texturePath);
-		// var material = new MeshBasicMaterial({ map: texture });
-		//var material = new THREE.MeshBasicMaterial({ color: 0x0000ff });
 		this.mesh = new Mesh(geometry, material);
 		this.mesh.rotation.x += Math.PI / 2;
 
@@ -168,9 +164,7 @@ export class SatelliteModel {
 		}
 	}
 
-	// TODO: Test this function
 	public disposeOfSatellite(scene: THREE.Scene): void {
-		// TODO: deleting function
 
 		this.mesh.geometry.dispose();
 		this.mesh.material.dispose();

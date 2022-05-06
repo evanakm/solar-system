@@ -1,10 +1,3 @@
-// import { cloneDeep } from 'lodash';
-// import PlanetSlider from './planetSlider';
-// import './planetPanelStyle.scss';
-// import EditingPanel from './editingPanel';
-// import { BackendSatelliteData, ConversionUtility, SatellitePanelViewParameters } from '../../../utilities/mvcConversions';
-// import { Observer, Subject } from 'rxjs';
-
 import { Component, ViewChild, ViewContainerRef, Input, Inject } from '@angular/core';
 import { MVCTokens } from 'src/app/mvc-backbone/tokens';
 import { MVCEngineService } from 'src/app/mvc-backbone/mvcEngine.service';
@@ -36,22 +29,14 @@ export class SatelliteControlsComponent implements SatelliteControlsInterface {
     public readonly slider4note: string = "Period of rotation (seconds)";
 
     constructor(@Inject(MVCTokens.MVCEngineServiceToken) private mvc: MVCEngineService) {
-        //console.log('mvc = ' + JSON.stringify(this.mvc));
-        //console.log('mvc.SolarSystemModel = ' + JSON.stringify(this.mvc.SolarSystemModel));
-        //console.log('mvc.SolarSystemModel.SatelliteData = ' + JSON.stringify(this.mvc.SolarSystemModel.SatelliteData));
-        //console.log('mvc.SolarSystemModel.SatelliteData.TexturePath = ' + JSON.stringify(this.mvc.SolarSystemModel.SatelliteData.));
-        //console.log("selected id = " + this.mvc.ControlModel.SelectedID);
 
         this.updateSatelliteData(this.mvc.SolarSystemModel.SatelliteData);
 
-        //console.log("TexturePath = " + this.TexturePath)
-    
         // may need to throttle or debounce
         this.mvc.SolarSystemModel.onParametersChanged$.subscribe(data => {
             this.updateSatelliteData(data);
         });
 
-        // TODO: If the selected one is deleted, do I want to select a new one or disable?
         this.mvc.SolarSystemModel.onPlanetListChanged$.subscribe(data => {
             this.updateSatelliteData(data);
         });
@@ -65,12 +50,24 @@ export class SatelliteControlsComponent implements SatelliteControlsInterface {
         return this.isDisabled;
     }
 
+    public get DisableButtons(): boolean {
+        return this.mvc.ControlModel.SunIsSelected;
+    }
+
     public get SatelliteName(): string {
         return this.satelliteParams.name;
     }
 
     public get PrimaryName(): string {
         return this.satelliteParams.nameOfPrimary;
+    }
+
+    public get Notation(): string {
+        if (this.mvc.ControlModel.SunIsSelected) {
+            return 'The Sun';
+        } else {
+            return `${this.SatelliteName} (Orbiting ${this.PrimaryName})`;
+        }
     }
 
     public get OrbitalRadius(): number {
@@ -116,6 +113,17 @@ export class SatelliteControlsComponent implements SatelliteControlsInterface {
         this.satelliteParams.rotationalPeriod = value;
         this.sendDataToController();
     }).bind(this);
+
+    public changeName(): void {
+        const newName: string = prompt("Enter new name of satellite:", this.SatelliteName);
+        if (newName !== null && newName !== '') {
+            this.mvc.Controller.renameSatellite(this.UUID, newName);
+        }
+    }      
+
+    public deleteModelAndChildren(): void {
+        this.mvc.Controller.removeSatellite(this.UUID);
+    }
 
 
     private sendDataToController(): void {

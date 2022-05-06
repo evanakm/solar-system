@@ -5,7 +5,8 @@ import { MVCTokens } from 'src/app/mvc-backbone/tokens';
 
 @Component({
     selector: 'sidebar-buttons',
-    templateUrl: './sidebarButtons.component.html'
+    templateUrl: './sidebarButtons.component.html',
+    styleUrls: ['./sidebarButtons.component.scss']
 })
 export class SidebarButtonsComponent {
     @Input() texturePath: string;

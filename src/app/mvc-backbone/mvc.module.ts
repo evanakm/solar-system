@@ -29,16 +29,3 @@ export class MVCModule {
 
 }
 
-/*
-    public static forRoot(): ModuleWithProviders<WebSocketModule> {
-        return {
-            ngModule: WebSocketModule,
-            providers: [
-                // Web socket service
-                { provide: WebSocketTokens.WEBSOCKET_INTERFACE, useClass: WebSocketCommunicateService }
-            ]
-        };
-    }
-
-
-*/

@@ -43,7 +43,6 @@ export class SidebarWindowView {
         return this.renderer;
     }
 
-    // Draw the scene every time the screen is refreshed
     public animate(): void {
         this.renderer.render(this.scene, this.camera);
         requestAnimationFrame(this.animate.bind(this));
@@ -86,7 +85,6 @@ export class SidebarWindowViewportComponent implements OnInit, AfterViewInit {
         this.mvc.ControlModel.onSelectedBodyChanged$.subscribe(id => {
             const material = this.mvc.SolarSystemModel.getMaterialForId(id);
             this.view.swapMaterial(material);
-            //this.view.swapTexture(this.mvc.SolarSystemModel.getTexturePathForId(id));
         });
 
         this.view.Renderer.setSize(WIDTH, HEIGHT);

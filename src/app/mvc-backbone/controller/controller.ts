@@ -1,13 +1,19 @@
-import { SatelliteBackEndParameters, SatelliteFrontEndParameters } from "../models/satelliteModel";
+import { SatelliteBackEndParameters, SatelliteFrontEndParameters, SatelliteIdentifier } from "../models/satelliteModel";
 import { SolarSystemModel } from "../models/solarSystemModel";
-import { BackendSatelliteData, SatelliteDataWrapper, ConversionUtility } from "../../utilities/mvcConversions";
+import { BackendSatelliteData, ConversionUtility } from "../../utilities/mvcConversions";
 import { Subject, Observable } from 'rxjs';
 import { ControlModel } from '../models/controlModel';
 import { DefaultValues } from 'src/app/constants';
 
 export class Controller {
 
+    private deleteSubject: Subject<SatelliteIdentifier> = new Subject<SatelliteIdentifier>();
+
     constructor(private solarSystemModel: SolarSystemModel, private controlModel: ControlModel) {
+    }
+
+    public get onDeletion$(): Observable<SatelliteIdentifier> {
+        return this.deleteSubject.asObservable();
     }
 
     public acceptFrontEndParametersForId(params: SatelliteFrontEndParameters, id: string) {
@@ -46,12 +52,14 @@ export class Controller {
         this.createNewSatellite(satelliteName, this.controlModel.SelectedID, texturePath);
     }
 
-    // TODO
     public renameSatellite(satelliteId: string, newName: string): void {
+        this.solarSystemModel.renameSatellite(satelliteId, newName);
     }
 
     // TODO
     public removeSatellite(satelliteId: string): void {
+        // A bit convoluted, but SolarSystemViewport needs to pass its scene to the Backend, and this initiates the pipeline
+        this.deleteSubject.next(satelliteId);
     }
 
 }

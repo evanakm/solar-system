@@ -1,8 +1,3 @@
-// import React, { useContext, useRef, useState } from 'react';
-// import './planetPanelStyle.scss';
-// import './planetSliderStyle.scss'
-// import { debounce, throttle } from 'lodash';
-
 import { Component, Input, Inject, OnInit } from '@angular/core';
 import { MVCTokens } from 'src/app/mvc-backbone/tokens';
 import { MVCEngineService } from 'src/app/mvc-backbone/mvcEngine.service';
@@ -28,6 +23,14 @@ export class SatelliteSliderComponent implements OnInit {
     constructor(@Inject(MVCTokens.MVCEngineServiceToken) private mvc: MVCEngineService) {
     }
 
+    public get DisableSlider(): boolean {
+        return this.mvc.ControlModel.SunIsSelected;
+    }
+
+    public get Value(): number {
+        return Math.round(this.value);
+    }
+
     public ngOnInit() {
         this.sliderVal = this.value;
         this.sliderMin = this.minValue;
@@ -35,71 +38,9 @@ export class SatelliteSliderComponent implements OnInit {
         this.note = this.notation;
     }
 
-    rangeSlide(e): void {
-        this.value = e;
+    public rangeSlide(e): void {
+        this.value = Math.round(e);
         this.callback(this.value);
-        //this.mvc.Controller.acceptFrontEndParametersForId({}, this.uid)
     }
 
-
 }
-
-
-// export interface SliderProps {
-//     value: number;
-//     minValue: number;
-//     maxValue: number;
-//     uid: string;
-//     notation: string;
-//     callback: (value: number) => void;
-// }
-
-// const PlanetSlider = (props: SliderProps) => {
-//     const ref = useRef(null);
-
-//     const [state, updateState] = useState(props.value);
-
-//     //const debouncedCallback = throttle(props.callback, 1000);
-
-//     const rangeSlide = (value: string, targetRef: React.MutableRefObject<any>) => {
-//         updateState(() => parseInt(value));
-//         targetRef.current.innerHTML = state;
-//         props.callback(parseInt(value));
-//         //debouncedCallback(parseInt(value));
-//     }
-
-//     const debouncedRangeSlide = debounce(rangeSlide, 20);
-
-//     return(
-//         <React.Fragment>
-//             <tr>
-//                 <td className="slidercontainercell">
-//                     <input
-//                         className="range"
-//                         type="range"
-//                         name=""
-//                         value={state}
-//                         min={props.minValue}
-//                         max={props.maxValue}
-//                         onChange={(e) => debouncedRangeSlide(e.currentTarget.value, ref)}
-//                         //</td>onMouseMove={(e) => debouncedRangeSlide(e.currentTarget.value, ref)}
-//                         >
-//                     </input>
-//                 </td>
-//                 <td rowSpan={2} className="rangevalue" ref={ref}>
-//                     {state}
-//                 </td>
-//             </tr>
-//             <tr>
-//                 <td className="bodynote">
-//                     {props.notation}
-//                 </td>
-                
-//             </tr>
-//         </React.Fragment>
-
-//     );
-
-// }
-
-// export default PlanetSlider;

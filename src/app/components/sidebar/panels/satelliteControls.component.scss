@@ -7,7 +7,7 @@
 /*
 
 +------------------------------------------------------------+
-|       namecontainer bodyname (defined higher up)           |
+|                   namepanel satname                        |
 +------------------------------------------------------------+
 |                      nopad nomarg                          |
 |    +---------------------+------------+  +-------------+   |
@@ -44,3 +44,30 @@
   text-align: center;
 }
 
+.namepanel {
+	background-color: #32056d;
+	width: 100%;
+}
+
+.satname {
+  color: rgb(243, 182, 70);
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+  font-size: 1.3em;
+	padding-bottom:0px;
+	width: 100%;
+}
+
+
+.copyright {
+  padding: 0px;
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: .4em;
+  color: wheat;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+}

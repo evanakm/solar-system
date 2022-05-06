@@ -22,7 +22,6 @@ export class SolarSystemViewportComponent implements AfterViewInit {
     constructor(@Inject(MVCTokens.MVCEngineServiceToken) private mvc: MVCEngineService) {
         this.time = 0;
         this.startTime = performance.now();
-        //this.ssView = new SolarSystemView(mvc.SolarSystemModel, mvc.CameraModel);
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.mvc.SolarSystemModel.Sun.addToScene(this.scene);        
@@ -35,11 +34,11 @@ export class SolarSystemViewportComponent implements AfterViewInit {
             this.mvc.SolarSystemModel.addSatelliteToScene(id, this.scene)
         });
 
-    }
+        this.mvc.Controller.onDeletion$.subscribe(id => {
+            this.mvc.SolarSystemModel.removeSatelliteAndChildren(id, this.scene);
+        });
 
-    // public ngOnInit() {
-    //     this.updateCanvas();
-    // }
+    }
 
     public ngAfterViewInit() {
         this.solarSystem.nativeElement.appendChild(this.Renderer.domElement);
@@ -60,12 +59,6 @@ export class SolarSystemViewportComponent implements AfterViewInit {
 
     public setAspectRatio(aspectRatio: number): void {
         this.mvc.CameraModel.setAspectRatio(aspectRatio);
-    }
-
-    // TODO. Needed to access ssModel.
-    public addSatellite(idOfPrimary: string, satelliteRadius: number, rotationalSpeed: number,
-        orbitalRadius: number, orbitalPhase: number, texturePath: number) {
-
     }
 
     // Draw the scene every time the screen is refreshed

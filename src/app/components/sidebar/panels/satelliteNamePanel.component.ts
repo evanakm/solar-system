@@ -1,4 +1,4 @@
-import { Component, Input, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { SatelliteTableComponent } from './satelliteTable.component';
 import { MVCEngineService } from 'src/app/mvc-backbone/mvcEngine.service';
 import { MVCTokens } from 'src/app/mvc-backbone/tokens';
@@ -24,13 +24,7 @@ export class SatelliteNamePanelComponent {
 
     private parentRef: SatelliteTableComponent;
 
-    // TODO: Inject controller
     constructor(@Inject(MVCTokens.MVCEngineServiceToken) private mvc: MVCEngineService) {
-        //this.sidePanelView = null;
-
-        // sidePanelView.onActiveChanged$.subscribe(id => {
-        //     this.isActive = id === this.uid;
-        // })
     }
 
     public setParentRef(ref: SatelliteTableComponent) {
@@ -62,7 +56,11 @@ export class SatelliteNamePanelComponent {
 
     public get Notation(): string {
         const emSpace: string = String.fromCharCode(0x2005);
-        return `${emSpace}${this.SatelliteName} (Orbiting ${this.PrimaryName})`;
+        if (this.mvc.SolarSystemModel.Sun.UUID === this.UUID) {
+            return `${emSpace}Sun`;
+        } else {
+            return `${emSpace}${this.SatelliteName} (Orbiting ${this.PrimaryName})`;
+        }
     }
 
     public get IsActive(): boolean {
@@ -70,7 +68,6 @@ export class SatelliteNamePanelComponent {
     }
 
     public onClick() {
-        //this.isActive = true;
         this.mvc.ControlModel.SelectedID = this.uuid;
     }
 

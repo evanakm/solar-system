@@ -6,15 +6,16 @@
             </td>
         </tr>
         <tr>
-            <td class="ivoryborder" style="padding-top:1.5px;padding-bottom:1.5px">
-                <!--button (click)="changeTexture()">Change Texture</button-->
-                <input type="file" accept="image/png, image/jpeg" (change)="changeTexture($event)">
+            <td class="ivoryborder td-wrapper" style="padding-top:1.5px;padding-bottom:1.5px">
+                <div class="texture-input">
+                    <input type="file" id="upload-texture" class="file-type">
+                    <label for="upload-texture">Change Texture</label>
+                </div>
             </td>
         </tr>
         <tr>
             <td class="ivoryborder" style="padding-top:1.5px;padding-bottom:1.5px">
-                <button (click)="addSatellite()">Add Satellite</button>
-                <!--input type="file" accept="image/png, image/jpeg" (change)="addSatellite($event)"-->
+                <div class="add-satellite" (click)="addSatellite()">Add Satellite</div>
             </td>
         </tr>
     </tbody>

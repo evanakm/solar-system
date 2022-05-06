@@ -5,7 +5,6 @@ import { Material } from 'three';
 
 export class SolarSystemModel {
 
-    // The sun is not included in this because it does not go into the side panel.
     private satelliteModelsMap: Map<SatelliteIdentifier, { name: string, model: SatelliteModel }> = new Map<SatelliteIdentifier, { name: string, model: SatelliteModel }>();
 
     // The sun is the centre of the solar system, and its logic is slightly different.
@@ -26,7 +25,8 @@ export class SolarSystemModel {
             orbitalAngularVelocity: 0
         };
         this.sun = new SatelliteModel(null, this.sunParams, 'assets/textures/sun.jpg');
-    
+        this.satelliteModelsMap.set(this.sun.UUID, { name: 'Sun', model: this.sun });
+
         const TAU = Math.PI * 2;
 
         // Start with some default planets and moons
@@ -82,7 +82,7 @@ export class SolarSystemModel {
         return satelliteData;
     }
 
-    // To be the point of focus of the Camera
+    // Exposed because it needs to be the point of focus of the Camera
     public get Sun(): SatelliteModel {
         return this.sun;
     }
@@ -151,6 +151,7 @@ export class SolarSystemModel {
 
         const primaryID = this.satelliteModelsMap.get(id).model.ParentUUID;
 
+        // "orbiting the Sun" sounds more natural than "orbiting Sun"
         if (primaryID === this.Sun.UUID) {
             return 'the Sun';
         }

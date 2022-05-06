@@ -12,7 +12,7 @@ import { ControlModel } from './models/controlModel';
 export class MVCEngineService {
 
     private solarSystemModel = new SolarSystemModel(5);
-    private controlModel = new ControlModel(this.solarSystemModel.StartingBodyID);
+    private controlModel = new ControlModel(this.solarSystemModel);
     private controller = new Controller(this.solarSystemModel, this.controlModel);
     private cameraModel = new CameraModel(this.solarSystemModel.Sun, new Vector3(0,0,60), Math.PI/6, 70, 0, -0.017);
     //private sidePanelView = new SidePanelView(this.solarSystemModel, this.controller);
@@ -34,9 +34,5 @@ export class MVCEngineService {
     public get CameraModel(): CameraModel {
         return this.cameraModel;
     }
-
-    // public get SidePanelView(): SidePanelView {
-    //     return this.sidePanelView;
-    // }
 
 }
